@@ -1,6 +1,7 @@
 console.log("search");
 const search = function () {
   const input = document.querySelector(".search-block > input");
-  console.log(input);
+  const searchBtn = document.querySelector(".search-block > button");
+  console.log(searchBtn);
 };
 search();

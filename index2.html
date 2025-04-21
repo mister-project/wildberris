@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Загрузка JSON файла</title>
+</head>
+<body>
+    <input type="file" id="fileInput" accept=".json" />
+    <pre id="output"></pre>
+
+    <script>
+        document.getElementById('fileInput').addEventListener('change', function(event) {
+            const file = event.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    try {
+                        const json = JSON.parse(e.target.result);
+                        // Здесь вы можете работать с загруженными данными
+                        console.log(json[0].name); // Данные из файла
+                        document.getElementById('output').textContent = JSON.stringify(json, null, 2);
+                        
+                        // Пример получения элемента из json:
+                        const someElement = json.someKey; // замените someKey на нужный вам ключ
+                        console.log(someElement); // Элемент из json
+                    } catch (error) {
+                        console.error('Ошибка при парсинге JSON:', error);
+                    }
+                };
+                reader.readAsText(file);
+            }
+        });
+    </script>
+</body>
+</html>

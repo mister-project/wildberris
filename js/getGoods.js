@@ -17,7 +17,6 @@ const getGods = () => {
       getData();
     });
   });
-  localStorage.setItem("goods", JSON.stringify([1, 2, 3, 4, 5, 6]));
   const goods = JSON.parse(localStorage.getItem("goods"));
 
   console.log(goods);

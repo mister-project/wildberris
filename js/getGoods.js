@@ -31,8 +31,6 @@ const getGods = () => {
 					</div>
       `;
       goodsContainer.append(goodBlock);
-
-      console.log(good);
     });
   };
 

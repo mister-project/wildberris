@@ -1,5 +1,6 @@
 const getGods = () => {
   const links = document.querySelectorAll(".navigation-link");
+  console.log(links);
 
   const renderGoods = (goods) => {
     const goodsContainer = document.querySelector(".long-goods-list");

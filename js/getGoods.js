@@ -1,6 +1,8 @@
 const getGods = () => {
   const links = document.querySelectorAll(".navigation-link");
-  console.log(links);
+
+  const more = document.querySelector(".more");
+  console.log(more);
 
   const renderGoods = (goods) => {
     const goodsContainer = document.querySelector(".long-goods-list");
@@ -73,6 +75,16 @@ const getGods = () => {
   ) {
     // забираем из localstorage блок с ключем goods, если он там есть и если мы на странице с товаром и Рендерим его
     renderGoods(JSON.parse(localStorage.getItem("goods")));
+  }
+  if (more) {
+    //слушаем кнопку View All, но только на главной странице
+    more.addEventListener("click", (event) => {
+      event.preventDefault(); //отменяем реакцию на кнопку по умолчанию - переход по ссылке
+
+      getData(); // запускаем getData
+    });
+  } else {
+    console.log("нет");
   }
 };
 getGods();

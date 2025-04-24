@@ -1,8 +1,9 @@
+console.log("скрипт getGoods");
+
 const getGods = () => {
   const links = document.querySelectorAll(".navigation-link");
 
   const more = document.querySelector(".more");
-  console.log(more);
 
   const renderGoods = (goods) => {
     const goodsContainer = document.querySelector(".long-goods-list");
@@ -84,7 +85,6 @@ const getGods = () => {
       getData(); // запускаем getData
     });
   } else {
-    console.log("нет");
   }
 };
 getGods();

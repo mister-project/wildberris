@@ -6,7 +6,46 @@ const cart = function () {
   const closeBtn = cart.querySelector(".modal-close"); // кнопка закрытия модального окна
   const goodsContainer = document.querySelector(".long-goods-list");
   const cartTable = document.querySelector(".cart-table__goods"); //Содержательная часть таблицы в корзине товаров
-  console.log(cartTable);
+
+  //Ниже - функция удаления товара из корзины
+  const deleteCartItem = (id) => {
+    const cart = JSON.parse(localStorage.getItem("cart"));
+    const newCart = cart.filter((good) => {
+      return good.id !== id;
+    });
+
+    localStorage.setItem("cart", JSON.stringify(newCart));
+    renderCartGoods(JSON.parse(localStorage.getItem("cart"))); // после каждого изменения в карточке ее надо заново рендерить, поэтому и вызываем данную функцию
+  };
+
+  //Ниже - функция удвеличения количества товара в корзине
+  const plusCartItem = (id) => {
+    const cart = JSON.parse(localStorage.getItem("cart"));
+
+    const NewCart = cart.map((good) => {
+      if (good.id === id) {
+        good.count++;
+      }
+      return good;
+    });
+
+    localStorage.setItem("cart", JSON.stringify(NewCart));
+    renderCartGoods(JSON.parse(localStorage.getItem("cart"))); // после каждого изменения в карточке ее надо заново рендерить, поэтому и вызываем данную функцию
+  };
+
+  //Ниже - функция уменьшения количества товара в корзине
+  const minusCartItem = (id) => {
+    const cart = JSON.parse(localStorage.getItem("cart"));
+    const NewCart = cart.map((good) => {
+      if (good.id === id) {
+        good.count--;
+      }
+      return good;
+    });
+
+    localStorage.setItem("cart", JSON.stringify(NewCart));
+    renderCartGoods(JSON.parse(localStorage.getItem("cart"))); // после каждого изменения в карточке ее надо заново рендерить, поэтому и вызываем данную функцию
+  };
 
   const addToCart = (id) => {
     // Парсим (переводим) строку из localStorage в обект goods и Находим по полученному iD элемент в массиве(обьекте) goods. Выводим этот элемент со всеми атрибутами
@@ -34,8 +73,44 @@ const cart = function () {
     localStorage.setItem("cart", JSON.stringify(cart));
   };
 
+  //Начало. Функция рендера товара в корзину
+  const renderCartGoods = (goods) => {
+    cartTable.innerHTML = "";
+
+    //Перебираем массив товаров в корзине для изменения верстки корзины
+    goods.forEach((good) => {
+      const tr = document.createElement("tr");
+      tr.innerHTML = `
+            <td>${good.name}</td>
+						<td>${good.price}$</td>
+						<td><button class="cart-btn-minus"">-</button></td>
+						<td>${good.count}</td>
+						<td><button class=" cart-btn-plus"">+</button></td>
+						<td>${+good.price * +good.count}$</td>
+						<td><button class="cart-btn-delete"">x</button></td>
+      `;
+      cartTable.append(tr); //добавление строки в таблицу корзины
+      //Ниже - добавление, удаление количества товара в заказе через кнопки в корзине
+      tr.addEventListener("click", (e) => {
+        if (e.target.classList.contains("cart-btn-minus")) {
+          minusCartItem(good.id);
+        } else if (e.target.classList.contains("cart-btn-plus")) {
+          plusCartItem(good.id);
+        } else if (e.target.classList.contains("cart-btn-delete")) {
+          deleteCartItem(good.id);
+        }
+      });
+    });
+  };
+
   cartBtn.addEventListener("click", function () {
     //нажатие кнопки Card
+    const cartArray = localStorage.getItem("cart") // через тернарное выражение проветяем -  есть ли в localStorage значение под ключом "cart", и если оно есть, то парсим это значение из JSON-строки в  массив, а если его нет — присваиваем переменной cart пустой массив.
+      ? JSON.parse(localStorage.getItem("cart"))
+      : [];
+
+    renderCartGoods(cartArray); // запуск функции рендеринга с массивом CartArray
+
     console.log("рендер товара");
 
     cart.style.display = "flex";

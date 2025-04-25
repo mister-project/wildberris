@@ -50,9 +50,9 @@ const getGods = () => {
 
         localStorage.setItem("goods", JSON.stringify(array)); // загрузка массива из базы в localStorage
 
-        if (window.location.pathname !== "/wildberris/goods.html") {
+        if (window.location.pathname !== "/goods.html") {
           // проверка - если мы не на странице с товарами, то по клику надо переходить на нее
-          window.location.href = "/wildberris/goods.html";
+          window.location.href = "./goods.html";
         } else {
           // то есть если мы уже на странице с товарами, то тогда запускаем рендеринг и фильтрацию по категории или gender
         }
@@ -72,7 +72,7 @@ const getGods = () => {
 
   if (
     localStorage.getItem("goods") &&
-    window.location.pathname === "/wildberris/goods.html"
+    window.location.pathname === "/goods.html"
   ) {
     // забираем из localstorage блок с ключем goods, если он там есть и если мы на странице с товаром и Рендерим его
     renderGoods(JSON.parse(localStorage.getItem("goods")));

@@ -6,6 +6,10 @@ const cart = function () {
   const closeBtn = cart.querySelector(".modal-close"); // кнопка закрытия модального окна
   const goodsContainer = document.querySelector(".long-goods-list");
   const cartTable = document.querySelector(".cart-table__goods"); //Содержательная часть таблицы в корзине товаров
+  const modalForm = document.querySelector(".modal-form");
+  const cardTableTotal = document.querySelector(".card-table__total");
+
+  console.log(cardTableTotal);
 
   //Ниже - функция удаления товара из корзины
   const deleteCartItem = (id) => {
@@ -38,7 +42,9 @@ const cart = function () {
     const cart = JSON.parse(localStorage.getItem("cart"));
     const NewCart = cart.map((good) => {
       if (good.id === id) {
-        good.count--;
+        if (good.count > 0) {
+          good.count--;
+        }
       }
       return good;
     });
@@ -73,11 +79,11 @@ const cart = function () {
     localStorage.setItem("cart", JSON.stringify(cart));
   };
 
-  //Начало. Функция рендера товара в корзину
   const renderCartGoods = (goods) => {
     cartTable.innerHTML = "";
-
+    let total = 0; // Переменная для подсчета общей суммы заказа
     //Перебираем массив товаров в корзине для изменения верстки корзины
+    //Начало. Функция рендера товара в корзину
     goods.forEach((good) => {
       const tr = document.createElement("tr");
       tr.innerHTML = `
@@ -89,6 +95,10 @@ const cart = function () {
 						<td>${+good.price * +good.count}$</td>
 						<td><button class="cart-btn-delete"">x</button></td>
       `;
+      //Подсчет общей суммы заказа в корзине
+      let sum = +good.price * +good.count;
+      total = total + sum;
+
       cartTable.append(tr); //добавление строки в таблицу корзины
       //Ниже - добавление, удаление количества товара в заказе через кнопки в корзине
       tr.addEventListener("click", (e) => {
@@ -101,7 +111,52 @@ const cart = function () {
         }
       });
     });
+    //Перерисовка в корзиене метки ячейки  с итоговой суммой
+    cardTableTotal.innerHTML = `<th class="card-table__total" colspan="2">${total}$</th>`;
   };
+
+  // Функция отправки данных из корзины на тестовый сервер
+  const sendForm = (totalSum, name, phone) => {
+    const cartArray = localStorage.getItem("cart") // через тернарное выражение проветяем - епроверяем, есть ли в localStorage значение под ключом "cart", и если оно есть, то парсим это значение из JSON-строки в  массив, а если его нет — присваиваем переменной cart пустой массив.
+      ? JSON.parse(localStorage.getItem("cart"))
+      : [];
+    fetch("https://jsonplaceholder.typicode.com/posts", {
+      method: "POST",
+      body: JSON.stringify({
+        cart: cartArray,
+        totalSum: totalSum,
+        name: name,
+        phone: phone,
+      }),
+    })
+      .then((response) => {
+        // Проверяем, успешен ли ответ
+        if (response.ok) {
+          // Если ответ успешен, можем удалить данные из localStorage
+          localStorage.removeItem("cart");
+          alert("отправка содержимого Корзины прошла успешно. Она очищена");
+          // return response.json(); // Можете вернуть JSON, если необходимо
+        } else {
+          throw new Error("Ошибка сети");
+        }
+      })
+      .then(() => {
+        cart.style.display = "";
+      });
+  };
+
+  // Отлавливаем подтверждение заказа в корзине
+  modalForm.addEventListener("submit", (e) => {
+    e.preventDefault(); // блокирование стандартного поведения на клик
+
+    const lastCartTotal =
+      document.querySelector(".card-table__total").textContent;
+    const nameCustomer = document.querySelector('[name="nameCustomer"]').value;
+    const phoneCustomer = document.querySelector(
+      '[name="phoneCustomer"]'
+    ).value;
+    sendForm(lastCartTotal, nameCustomer, phoneCustomer);
+  });
 
   cartBtn.addEventListener("click", function () {
     //нажатие кнопки Card

@@ -52,7 +52,7 @@ const getGods = () => {
 
         if (window.location.pathname !== "/goods.html") {
           // проверка - если мы не на странице с товарами, то по клику надо переходить на нее
-          window.location.href = "./goods.html";
+          window.location.href = "goods.html";
         } else {
           // то есть если мы уже на странице с товарами, то тогда запускаем рендеринг и фильтрацию по категории или gender
         }

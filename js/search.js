@@ -51,9 +51,9 @@ const search = function () {
 
         localStorage.setItem("goods", JSON.stringify(array)); // загрузка массива из базы в localStorage
 
-        if (window.location.pathname !== "/goods.html") {
+        if (window.location.pathname !== "/wildberris/goods.html") {
           // проверка - если мы не на странице с товарами, то по клику надо переходить на нее
-          window.location.href = "/goods.html";
+          window.location.href = "/wildberris/goods.html";
         } else {
           // то есть если мы уже на странице с товарами, то тогда запускаем рендеринг и фильтрацию по категории или gender
         }
